@@ -1,7 +1,6 @@
 name: esewa_flutter
-description: An un-official Flutter plugin for eSewa Payment Gateway, integrate with ease and without any hassle. With this plugin, you can easily integrate eSewa Payment Gateway into your Flutter app and start accepting payments from your customers. Whether you're building an eCommerce app or any other type of app that requires payments, this plugin makes the integration process simple and straightforward.
+description: An un-official Flutter plugin for eSewa Payment Gateway, integrate with ease and without any hassle.
 version: 1.0.0
-author: Nabraj Khadka
 license: MIT
 issue_tracker: https://github.com/iamnabink/flutter_esewa/issues
 homepage: https://github.com/iamnabink/flutter_esewa.git

@@ -10,9 +10,9 @@ part 'src/model/error_codes.dart';
 
 part 'src/esewa_service.dart';
 
-part 'src/model/eSewa_payment_response.dart';
+part 'src/model/esewa_payment_response.dart';
 
-part 'src/model/eSewa_payment_result.dart';
+part 'src/model/esewa_payment_result.dart';
 
 part 'src/model/esewa_config.dart';
 
