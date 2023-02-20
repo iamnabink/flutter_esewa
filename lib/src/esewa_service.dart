@@ -12,7 +12,7 @@ class _EsewaService {
         context,
         MaterialPageRoute(builder: (context) => WalletPage(eSewaConfig)),
       );
-      return result;
+      return await Future.delayed(const Duration(milliseconds: 500), () => result);
     } catch (e) {
       return EsewaPaymentResult(error: 'Payment Failed or Cancelled!');
     }
