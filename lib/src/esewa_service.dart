@@ -13,7 +13,7 @@ class _EsewaService {
         MaterialPageRoute(builder: (context) => WalletPage(eSewaConfig)),
       );
       // Wait for the user to return from the Esewa payment screen before closing any dialogs
-      // This delay should give enough time for the success/failure dialog (if any) to appear and prevent it from closing prematurely.
+      // (if any) This delay should give enough time for the success/failure dialog to appear and prevent it from closing prematurely.
       return await Future.delayed(
           const Duration(milliseconds: 500), () => result);
     } catch (e) {

@@ -10,16 +10,22 @@ class WalletPage extends StatefulWidget {
 }
 
 class _WalletPageState extends State<WalletPage> {
+  // The eSewa configuration object.
   late ESewaConfig eSewaConfig;
+
+  // The URLRequest object that will be used to load the eSewa payment page.
   late URLRequest paymentRequest;
 
   @override
   void initState() {
+    // Assign the eSewa configuration object from the widget to the local variable.
     eSewaConfig = widget.eSewaConfig;
+    // Generate the URLRequest object from the eSewa configuration parameters.
     paymentRequest = getURLRequest();
     super.initState();
   }
 
+  // The loading state of the WebView.
   bool _isLoading = true;
 
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
@@ -34,6 +40,7 @@ class _WalletPageState extends State<WalletPage> {
         allowsInlineMediaPlayback: true,
       ));
 
+  // Generates the URLRequest object for the eSewa payment page.
   URLRequest getURLRequest() {
     var url =
         "${eSewaConfig.serverUrl}tAmt=${eSewaConfig.tAmt}&amt=${eSewaConfig.amt.toPrecision(2)}&txAmt=${eSewaConfig.txAmt?.toPrecision(2)}&psc=${eSewaConfig.psc}&pdc=${eSewaConfig.pdc}&scd=${eSewaConfig.scd}&pid=${eSewaConfig.pid}&su=${eSewaConfig.su}&fu=${eSewaConfig.fu}";
@@ -56,16 +63,19 @@ class _WalletPageState extends State<WalletPage> {
             initialUrlRequest: paymentRequest,
             initialOptions: options,
             onWebViewCreated: (webViewController) {
+              // When the WebView is created, set the isLoading state to false
               setState(() {
                 _isLoading = false;
               });
             },
             onLoadStart: (controller, url) {
+              // When the WebView starts loading, set the isLoading state to true
               setState(() {
                 _isLoading = true;
               });
             },
             onLoadStop: (controller, url) async {
+              // When the WebView finishes loading, set the isLoading state to false
               setState(() {
                 _isLoading = false;
                 if (kDebugMode) {
@@ -80,6 +90,7 @@ class _WalletPageState extends State<WalletPage> {
                 print(uri.toString());
                 print(body);
               }
+              // Check if the URL scheme is one of the allowed schemes
               if (![
                 "http",
                 "https",
@@ -89,12 +100,15 @@ class _WalletPageState extends State<WalletPage> {
                 "javascript",
                 "about"
               ].contains(uri.scheme)) {
+                // If the URL scheme is not allowed, cancel the navigation
                 return NavigationActionPolicy.CANCEL;
               }
               try {
                 var result = Uri.parse(uri.toString());
                 var body = result.queryParameters;
                 if (body['refId'] != null) {
+                  // If the URL contains a refId parameter, create a payment response
+                  // and return it to the previous screen using Navigator.pop()
                   await createPaymentResponse(body).then((value) {
                     Navigator.pop(context, EsewaPaymentResult(data: value));
                   });
@@ -107,6 +121,8 @@ class _WalletPageState extends State<WalletPage> {
               return NavigationActionPolicy.ALLOW;
             },
             onLoadError: (controller, url, code, message) {
+              // If there is an error while loading the WebView, print the error message
+              // if the app is in debug mode
               if (kDebugMode) {
                 print('CODE $code Message $message');
               }
@@ -122,6 +138,8 @@ class _WalletPageState extends State<WalletPage> {
     );
   }
 
+  // Create a payment response object using the refId, productId, and totalAmount
+  // values from the URL
   Future<EsewaPaymentResponse> createPaymentResponse(
       Map<String, dynamic> body) async {
     final params = EsewaPaymentResponse(
@@ -133,6 +151,7 @@ class _WalletPageState extends State<WalletPage> {
   }
 }
 
+// Extension method to convert a double to a string with the specified number of decimal places
 extension ExtensionOnDouble on double {
   double toPrecision(int n) => double.parse(toStringAsFixed(n));
 }
