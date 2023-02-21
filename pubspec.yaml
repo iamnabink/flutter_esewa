@@ -1,24 +1,24 @@
 name: esewa_flutter
 description: An un-official Flutter plugin for eSewa Payment Gateway, integrate with ease and without any hassle.
-version: 1.0.0
+version: 1.1.1
 license: MIT
 issue_tracker: https://github.com/iamnabink/flutter_esewa/issues
 homepage: https://github.com/iamnabink/flutter_esewa.git
 
 environment:
-  sdk: ">=2.16.2 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_inappwebview: ^5.4.4+3 #A Flutter plugin that allows you to add an inline webview, to use an headless webview, and to open an in-app browser window.
+  flutter_inappwebview: ^5.7.2+3 #A Flutter plugin that allows you to add an inline webview, to use an headless webview, and to open an in-app browser window.
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.0
+  flutter_lints: ^2.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -26,4 +26,3 @@ dev_dependencies:
 flutter:
   assets:
     - LICENSE
-    -
