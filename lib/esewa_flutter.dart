@@ -9,6 +9,7 @@ import 'src/utils/constants.dart';
 part 'src/model/error_codes.dart';
 
 part 'src/esewa_service.dart';
+part 'src/utils/helper_extension.dart';
 
 part 'src/model/esewa_payment_response.dart';
 

@@ -12,7 +12,7 @@ class ESewaConfig {
     this.psc = 0,
     this.pdc = 0,
     double? tAmt,
-  }) : tAmt = tAmt ?? amt + (pdc ?? 0.0);
+  }) : tAmt = tAmt ?? amt + (pdc ?? 0.0) + (psc ?? 0.0) + (txAmt ?? 0.0);
 
   /// Creates an instance of `ESewaConfig` for dev mode
   ESewaConfig.dev({
@@ -25,7 +25,8 @@ class ESewaConfig {
     required this.pid,
     required this.su,
     required this.fu,
-  }) : tAmt = amt + (pdc ?? 0.0);
+    double? tAmt,
+  }) : tAmt = tAmt ?? amt + (pdc ?? 0.0) + (psc ?? 0.0) + (txAmt ?? 0.0);
 
   /// Total payment amount including tax, service and deliver charge. [i.e tAmt = amt + txAmt + psc + tAmt]
   double? tAmt;

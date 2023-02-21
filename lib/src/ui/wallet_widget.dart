@@ -1,5 +1,6 @@
 part of esewa_flutter;
 
+/// Loads esewa Payment View
 class WalletPage extends StatefulWidget {
   final ESewaConfig eSewaConfig;
 
@@ -11,10 +12,10 @@ class WalletPage extends StatefulWidget {
 
 class _WalletPageState extends State<WalletPage> {
   // The eSewa configuration object.
-  late ESewaConfig eSewaConfig;
+  late final ESewaConfig eSewaConfig;
 
   // The URLRequest object that will be used to load the eSewa payment page.
-  late URLRequest paymentRequest;
+  late final URLRequest paymentRequest;
 
   @override
   void initState() {
@@ -109,7 +110,7 @@ class _WalletPageState extends State<WalletPage> {
                 if (body['refId'] != null) {
                   // If the URL contains a refId parameter, create a payment response
                   // and return it to the previous screen using Navigator.pop()
-                  await createPaymentResponse(body).then((value) {
+                  _createPaymentResponse(body).then((value) {
                     Navigator.pop(context, EsewaPaymentResult(data: value));
                   });
                 }
@@ -140,7 +141,7 @@ class _WalletPageState extends State<WalletPage> {
 
   // Create a payment response object using the refId, productId, and totalAmount
   // values from the URL
-  Future<EsewaPaymentResponse> createPaymentResponse(
+  Future<EsewaPaymentResponse> _createPaymentResponse(
       Map<String, dynamic> body) async {
     final params = EsewaPaymentResponse(
       refId: body['refId'],
@@ -149,9 +150,4 @@ class _WalletPageState extends State<WalletPage> {
     );
     return params;
   }
-}
-
-// Extension method to convert a double to a string with the specified number of decimal places
-extension ExtensionOnDouble on double {
-  double toPrecision(int n) => double.parse(toStringAsFixed(n));
 }

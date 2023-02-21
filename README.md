@@ -64,7 +64,6 @@ if (result.hasData) {
 ```
 final config = ESewaConfig.dev(
   amt: 100,
-  scd: 'merchant_id',
   pid: 'product_id',
   su: 'https://success.com.np',
   fu: 'https://failure.com.np',

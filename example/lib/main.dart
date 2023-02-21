@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Esewa Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       home: const EsewaApp(title: 'Esewa Payment'),
     );
@@ -36,6 +36,7 @@ class _EsewaAppState extends State<EsewaApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         title: Text(widget.title),
       ),
       body: Center(
@@ -51,10 +52,10 @@ class _EsewaAppState extends State<EsewaApp> {
                   pid: '1212',
                   // scd: dotenv.env['ESEWA_SCD']!
                 ));
-            // final result = await fakeEsewa();
             if (result.hasData) {
               final response = result.data!;
               if (kDebugMode) {
+                // call your api here
                 print(response.toJson());
               }
             } else {
