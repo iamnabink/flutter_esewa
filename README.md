@@ -1,4 +1,4 @@
-# eSewa Flutter
+# eSewa Flutter [![Share on Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Flutter%20InAppBrowser%20plugin!&url=https://github.com/iamnabink/flutter_esewa&hashtags=flutter,flutterio,dart,wallet,esewa,paymentgateway) [![Share on Facebook](https://img.shields.io/badge/share-facebook-blue.svg?longCache=true&style=flat&colorB=%234267b2)](https://www.facebook.com/sharer/sharer.php?u=https%3A//github.com/iamnabink/flutter_esewa)
 
 [![Pub Version](https://img.shields.io/pub/v/esewa_flutter.svg)](https://pub.dev/packages/esewa_flutter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -8,9 +8,9 @@ eSewa Payment Gateway into your Flutter app and start accepting payments from yo
 Whether you're building an eCommerce app or any other type of app that requires payments, this
 plugin makes the integration process simple and straightforward.
 
-![Cover Image](screenshots/cover.png)
+![Cover Image](https://github.com/iamnabink/flutter_esewa/raw/main/screenshots/cover.png)
 
-# Features
+## Features
 
 - Easy integration
 - No complex setup
@@ -173,16 +173,13 @@ information:
 
 Here are some screenshots of the eSewa Payment Gateway integrated into a ecommerce Flutter app:
 
-<div style="display:flex; justify-content: center;">
-  <div style="text-align: center; margin-right: 20px;">
-    <h3>Example Order Screen</h3>
-    <img src="screenshots/order_screen.png" style="width: 50%;">
-  </div>
-  <div style="text-align: center; margin-left: 20px;">
-    <h3>Payment Screen</h3>
-    <img src="screenshots/payment_screen.png" style="width: 50%;">
-  </div>
-</div>
+### Example Order Screen
+
+![Example Order Screen](https://github.com/iamnabink/flutter_esewa/raw/main/screenshots/order_screen.png)
+
+### Payment Screen
+
+![Payment Screen](https://github.com/iamnabink/flutter_esewa/raw/main/screenshots/payment_screen.png)
 
 
 
