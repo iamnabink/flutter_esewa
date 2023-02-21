@@ -1,6 +1,6 @@
 name: esewa_flutter
 description: An un-official Flutter plugin for eSewa Payment Gateway, integrate with ease and without any hassle.
-version: 1.0.1
+version: 1.1.0
 license: MIT
 issue_tracker: https://github.com/iamnabink/flutter_esewa/issues
 homepage: https://github.com/iamnabink/flutter_esewa

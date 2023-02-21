@@ -1,4 +1,5 @@
 part of esewa_flutter;
+
 /// Creates an instance of `ESewaConfig` for live mode
 class ESewaConfig {
   ESewaConfig.live({

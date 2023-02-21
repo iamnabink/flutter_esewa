@@ -2,9 +2,9 @@ part of esewa_flutter;
 
 class EsewaPaymentResponse {
   EsewaPaymentResponse({
-     this.productId,
-     this.totalAmount,
-     this.refId,
+    this.productId,
+    this.totalAmount,
+    this.refId,
   });
 
   String? productId;

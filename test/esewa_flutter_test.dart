@@ -1,5 +1,2 @@
-
 // TODO: Add testing
-void main() {
-
-}
+void main() {}
