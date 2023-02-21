@@ -3,7 +3,7 @@ description: An un-official Flutter plugin for eSewa Payment Gateway, integrate 
 version: 1.0.1
 license: MIT
 issue_tracker: https://github.com/iamnabink/flutter_esewa/issues
-homepage: https://github.com/iamnabink/flutter_esewa.git
+homepage: https://github.com/iamnabink/flutter_esewa
 
 environment:
   sdk: ">=2.12.0 <4.0.0"
