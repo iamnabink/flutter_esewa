@@ -1,24 +1,43 @@
 part of esewa_flutter;
 
-/// Loads esewa Payment View
-class WalletPage extends StatefulWidget {
-  final ESewaConfig eSewaConfig;
+/// holds Esewa page's content widget
+class EsewaPageContent {
+  /// Page appbar
+  final AppBar? appBar;
 
-  const WalletPage(this.eSewaConfig, {Key? key}) : super(key: key);
+  /// Page custom loader
+  final Widget? progressLoader;
 
-  @override
-  State<WalletPage> createState() => _WalletPageState();
+  EsewaPageContent({this.appBar, this.progressLoader});
 }
 
-class _WalletPageState extends State<WalletPage> {
-  // The eSewa configuration object.
+/// Esewa Payment Screen/View
+class EsewaPage extends StatefulWidget {
+  /// The eSewa configuration object.
+  final ESewaConfig eSewaConfig;
+
+  /// Esewa page's content widget
+  final EsewaPageContent? pageContents;
+
+  const EsewaPage(this.eSewaConfig, {this.pageContents, Key? key})
+      : super(key: key);
+
+  @override
+  State<EsewaPage> createState() => _EsewaPageState();
+}
+
+class _EsewaPageState extends State<EsewaPage> {
+  /// The eSewa configuration object.
   late final ESewaConfig eSewaConfig;
 
-  // The URLRequest object that will be used to load the eSewa payment page.
+  /// The URLRequest object that will be used to load the eSewa payment page.
   late final URLRequest paymentRequest;
+
+  late final EsewaPageContent? content;
 
   @override
   void initState() {
+    content = widget.pageContents;
     // Assign the eSewa configuration object from the widget to the local variable.
     eSewaConfig = widget.eSewaConfig;
     // Generate the URLRequest object from the eSewa configuration parameters.
@@ -55,9 +74,10 @@ class _WalletPageState extends State<WalletPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Pay Via Esewa"),
-      ),
+      appBar: content?.appBar ??
+          AppBar(
+            title: const Text("Pay Via Esewa"),
+          ),
       body: Stack(
         children: [
           InAppWebView(
@@ -131,8 +151,9 @@ class _WalletPageState extends State<WalletPage> {
             onConsoleMessage: (controller, consoleMessage) {},
           ),
           if (_isLoading)
-            const Center(
-              child: CircularProgressIndicator(),
+            Center(
+              child:
+                  content?.progressLoader ?? const CircularProgressIndicator(),
             ),
         ],
       ),

@@ -6,11 +6,17 @@ class _EsewaService {
   static _EsewaService i = _EsewaService._();
 
   Future<EsewaPaymentResult> init(
-      {required BuildContext context, required ESewaConfig eSewaConfig}) async {
+      {required BuildContext context,
+      required ESewaConfig eSewaConfig,
+      EsewaPageContent? walletPageContent}) async {
     try {
       final result = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => WalletPage(eSewaConfig)),
+        MaterialPageRoute(
+            builder: (context) => EsewaPage(
+                  eSewaConfig,
+                  pageContents: walletPageContent,
+                )),
       );
       // Wait for the user to return from the Esewa payment screen before closing any dialogs
       // (if any) This delay should give enough time for the success/failure dialog to appear and prevent it from closing prematurely.
@@ -37,12 +43,12 @@ class Esewa {
   static Esewa getInstance() => Esewa._();
 
   /// like webview, native app, or a dialog.
-  Future<EsewaPaymentResult> init({
-    required BuildContext context,
-    required ESewaConfig eSewaConfig,
-  }) =>
+  Future<EsewaPaymentResult> init(
+          {required BuildContext context,
+          required ESewaConfig eSewaConfig,
+          EsewaPageContent? walletPageContent}) =>
       _payment.init(
-        context: context,
-        eSewaConfig: eSewaConfig,
-      );
+          context: context,
+          eSewaConfig: eSewaConfig,
+          walletPageContent: walletPageContent);
 }

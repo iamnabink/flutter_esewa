@@ -96,7 +96,6 @@ final config = ESewaConfig.dev(
 | Android  | ✅     |
 | iOS      | ✅     |
 
-
 # API
 
 ### Class: ESewaConfig
@@ -128,7 +127,7 @@ It has two constructors:
 - `txAmt` (optional): Tax amount on product or item or ticket etc. Default value is 0.
 - `psc` (optional): Service charge by merchant on product or item or ticket etc. Default value is 0.
 - `pdc` (optional): Delivery charge by merchant on product or item or ticket etc. Default value is
-  0.
+    0.
 
 ### Class: EsewaPaymentResult
 
@@ -151,6 +150,54 @@ Class providing the main interface for the eSewa payment integration.
 
 - `init(BuildContext context, ESewaConfig e)`: Initializes the eSewa payment gateway with the given
   configuration.
+
+### EsewaPayButton
+
+The EsewaPayButton is a customizable button widget that allows users to initiate the payment process
+for the eSewa Payment Gateway. The button can be easily integrated into your Flutter app by calling
+the EsewaPayButton constructor and passing the required parameters.
+
+Here is an example of how to use the EsewaPayButton widget:
+
+```
+EsewaPayButton(
+  paymentConfig: ESewaConfig.dev(
+    su: 'https://www.marvel.com/hello',
+    amt: 10,
+    fu: 'https://www.marvel.com/hello',
+    pid: '1212',
+  ),
+  width: 40,
+  onFailure: (result) async {
+    // handle failure scenario here
+  },
+  onSuccess: (result) async {
+    // handle success scenario here
+  },
+),
+
+```
+
+With `EsewaPayButton`, the integration of eSewa Payment Gateway becomes even easier, as the payment
+process can be initiated with just a single button press.
+
+### Properties
+
+The `EsewaPayButton` widget has the following parameters:
+
+- `width`: The width of the button (default is `double.infinity`).
+- `height`: The height of the button (default is `40.0`).
+- `color`: The background color of the button (default is the primary color of the app).
+- `borderColor`: The border color of the button (default is the primary color of the app).
+- `onSuccess`: The callback function that is called when the payment is successful.
+- `onFailure`: The callback function that is called when the payment fails.
+- `paymentConfig`: The eSewa payment configuration object that is required to initialize the payment
+  screen.
+- `radius`: The border radius of the button (default is `4`).
+- `widget`: An optional widget to be placed instead of the title text field. If the user wants to
+  place a row with the eSewa icon or different widget.
+- `title`: The title of the button (default is "Pay with Esewa").
+- `textStyle`: The text style of the button title.
 
 ## Dev Testing Information
 
@@ -181,16 +228,19 @@ Here are some screenshots of the eSewa Payment Gateway integrated into a ecommer
 
 ![Payment Screen](https://github.com/iamnabink/flutter_esewa/raw/main/screenshots/payment_screen.png)
 
-
-
 ## Run the example app
 
 - Navigate to the example folder `cd example`
 - Install the dependencies
-  - `flutter pub get`
-- Set up configuration `ESewaConfig.live()` or directly run with just `ESewaConfig.dev()` in dev mode
+    - `flutter pub get`
+- Set up configuration `ESewaConfig.live()` or directly run with just `ESewaConfig.dev()` in dev
+  mode
 - Start the example
-  - Terminal : `flutter run`
+    - Terminal : `flutter run`
+
+# Note
+
+This package doesn't use any plugin or native APIs for payment initialization. Instead, it is based on the Flutter InAppWebView package. A shoutout to the developer of [InAppWebView](https://pub.dev/packages/flutter_inappwebview) package for providing such a useful package.
 
 # License
 
@@ -198,8 +248,8 @@ This plugin is released under the MIT License. See LICENSE for details.
 
 ## Contributions
 
-Contributions are welcome! To make this project better, Feel free to open an issue or submit a pull request
-on [Github](https://github.com/iamnabink/flutter_esewa/issues)..
+Contributions are welcome! To make this project better, Feel free to open an issue or submit a pull
+request on [Github](https://github.com/iamnabink/flutter_esewa/issues)..
 
 ## Contact
 
