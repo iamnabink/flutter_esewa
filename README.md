@@ -20,6 +20,13 @@ This package doesn't use any plugin or native APIs for payment initialization. I
 - Pure Dart code
 - Simple to use
 
+## Requirements
+
+- Dart sdk: ">=2.16.0 <3.0.0"
+- Flutter: ">=2.5.0"
+- Android: `minSdkVersion 19` and add support for `androidx` (see [AndroidX Migration](https://flutter.dev/docs/development/androidx-migration) to migrate an existing app)
+- iOS 9.0+: `--ios-language swift`, Xcode version `>= 14`
+
 # Usage
 
 1. Add `esewa_flutter` as a dependency in your `pubspec.yaml` file:
@@ -91,13 +98,6 @@ final config = ESewaConfig.dev(
   fu: 'https://failure.com.np',
 );
 ```
-
-# Platform Support
-
-| Platform | Status |
-| :------- | :----- |
-| Android  | ✅     |
-| iOS      | ✅     |
 
 # API
 
@@ -223,13 +223,12 @@ information:
 
 Here are some screenshots of the eSewa Payment Gateway integrated into a ecommerce Flutter app:
 
-### Example Order Screen
-
-![Example Order Screen](https://github.com/iamnabink/flutter_esewa/raw/main/screenshots/order_screen.png)
-
-### Payment Screen
-
-![Payment Screen](https://github.com/iamnabink/flutter_esewa/raw/main/screenshots/payment_screen.png)
+<table>
+  <tr>
+    <td><img src="https://github.com/iamnabink/flutter_esewa/raw/main/screenshots/order_screen.png" alt="Example Order Screen" width="400"/></td>
+    <td><img src="https://github.com/iamnabink/flutter_esewa/raw/main/screenshots/payment_screen.png" alt="Payment Screen" width="400"/></td>
+  </tr>
+</table>
 
 ## Run the example app
 

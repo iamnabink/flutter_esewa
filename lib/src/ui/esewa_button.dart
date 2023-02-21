@@ -68,12 +68,12 @@ class EsewaPayButton extends StatelessWidget {
           }
         },
         style: ElevatedButton.styleFrom(
-          primary: color ?? Theme.of(context).primaryColor,
+          primary: color,
           elevation: 0,
           side: borderColor != null
               ? BorderSide(
                   width: 1,
-                  color: borderColor ?? Theme.of(context).primaryColor,
+                  color: borderColor!,
                 )
               : null,
           minimumSize: Size(width ?? double.infinity, height ?? 40.0),
@@ -81,9 +81,7 @@ class EsewaPayButton extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(radius ?? 4)),
           ),
         ),
-        child: widget ??
-            Text(title ?? 'Pay with Esewa',
-                style: textStyle ?? Theme.of(context).textTheme.bodyText1),
+        child: widget ?? Text(title ?? 'Pay with Esewa', style: textStyle),
       ),
     );
   }
