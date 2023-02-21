@@ -6,8 +6,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import 'src/utils/constants.dart';
 
-part 'src/model/error_codes.dart';
-
 part 'src/esewa_service.dart';
 part 'src/utils/helper_extension.dart';
 

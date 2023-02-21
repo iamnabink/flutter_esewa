@@ -116,7 +116,7 @@ class _WalletPageState extends State<WalletPage> {
                 }
               } catch (e) {
                 Navigator.pop(
-                    context, EsewaPaymentResult(error: 'Payment Cancelled'));
+                    context, EsewaPaymentResult(error: kPaymentErrorMessage));
               }
 
               return NavigationActionPolicy.ALLOW;
