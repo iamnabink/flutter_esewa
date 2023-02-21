@@ -10,6 +10,9 @@ plugin makes the integration process simple and straightforward.
 
 ![Cover Image](https://github.com/iamnabink/flutter_esewa/raw/main/screenshots/cover.png)
 
+# Note
+This package doesn't use any plugin or native APIs for payment initialization. Instead, it is based on the Flutter InAppWebView package. A shoutout to the developer of [InAppWebView](https://pub.dev/packages/flutter_inappwebview) package for providing such a useful package.
+
 ## Features
 
 - Easy integration
@@ -237,10 +240,6 @@ Here are some screenshots of the eSewa Payment Gateway integrated into a ecommer
   mode
 - Start the example
     - Terminal : `flutter run`
-
-# Note
-
-This package doesn't use any plugin or native APIs for payment initialization. Instead, it is based on the Flutter InAppWebView package. A shoutout to the developer of [InAppWebView](https://pub.dev/packages/flutter_inappwebview) package for providing such a useful package.
 
 # License
 

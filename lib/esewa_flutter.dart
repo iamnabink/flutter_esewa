@@ -18,4 +18,4 @@ part 'src/model/esewa_payment_result.dart';
 
 part 'src/model/esewa_config.dart';
 
-part 'src/ui/wallet_widget.dart';
+part 'src/ui/wallet_page.dart';
