@@ -22,10 +22,20 @@ This package doesn't use any plugin or native APIs for payment initialization. I
 
 ## Requirements
 
-- Dart sdk: ">=2.16.0 <3.0.0"
-- Flutter: ">=2.0.0"
-- Android: `minSdkVersion 19` and add support for `androidx` (see [AndroidX Migration](https://flutter.dev/docs/development/androidx-migration) to migrate an existing app)
-- iOS 9.0+: `--ios-language swift`, Xcode version `>= 14`
+* Android: `minSdkVersion 19` and add support for `androidx` (see [AndroidX Migration](https://flutter.dev/docs/development/androidx-migration))
+* iOS: `--ios-language swift`, Xcode version `>= 11`
+
+## Setup
+
+### iOS
+No Configuration Needed
+
+For more info, [see here](https://pub.dev/packages/flutter_inappwebview#important-note-for-ios)
+
+### Android
+Set `minSdkVersion` of your `android/app/build.gradle` file to at least 17.
+
+For more info, [see here](https://pub.dev/packages/flutter_inappwebview#important-note-for-android)
 
 # Usage
 
