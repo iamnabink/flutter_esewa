@@ -1,4 +1,5 @@
 import 'package:esewa_flutter/esewa_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -54,9 +55,25 @@ class _EsewaAppState extends State<EsewaApp> {
                 pid: '1212',
                 // scd: dotenv.env['ESEWA_SCD']!
               ),
-              width: 40,
-              onFailure: (result) async {},
-              onSuccess: (result) async {},
+              width: 100,
+              onFailure: (result) async {
+                setState(() {
+                  refId = '';
+                  hasError = result;
+                });
+                if (kDebugMode) {
+                  print(result);
+                }
+              },
+              onSuccess: (result) async {
+                setState(() {
+                  hasError = '';
+                  refId = result.refId!;
+                });
+                if (kDebugMode) {
+                  print(result.toJson());
+                }
+              },
             ),
 
             /// Example Use case - 1

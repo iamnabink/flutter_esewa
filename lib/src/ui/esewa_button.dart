@@ -7,11 +7,8 @@ class EsewaPayButton extends StatelessWidget {
   /// button height
   final double? height;
 
-  /// button background color
-  final Color? color;
-
-  /// button border color
-  final Color? borderColor;
+  /// elevated button style
+  final ButtonStyle? style;
 
   /// onSuccess callback, when payment will be succeed this call back will be called with esewa payment response
   final Function(EsewaPaymentResponse) onSuccess;
@@ -40,8 +37,7 @@ class EsewaPayButton extends StatelessWidget {
     this.width,
     this.textStyle,
     this.widget,
-    this.borderColor,
-    this.color,
+    this.style,
     this.height,
     required this.paymentConfig,
     required this.onSuccess,
@@ -51,40 +47,28 @@ class EsewaPayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height ?? 40.0,
-      child: ElevatedButton(
-        // [Deprecated]: 'primary' is deprecated and shouldn't be used. Use backgroundColor instead. This feature was deprecated after v3.1.0.
-        onPressed: () async {
-          try {
-            final result = await Esewa.i
-                .init(context: context, eSewaConfig: paymentConfig);
-            if (result.hasData) {
-              onSuccess(result.data!);
-            } else {
-              onFailure(result.error!);
-            }
-          } catch (e) {
-            onFailure('An Exception Occurred');
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          final result =
+              await Esewa.i.init(context: context, eSewaConfig: paymentConfig);
+          if (result.hasData) {
+            onSuccess(result.data!);
+          } else {
+            onFailure(result.error!);
           }
-        },
-
-        style: ElevatedButton.styleFrom(
-          primary: color,
-          elevation: 0,
-          side: borderColor != null
-              ? BorderSide(
-                  width: 1,
-                  color: borderColor!,
-                )
-              : null,
-          minimumSize: Size(width ?? double.infinity, height ?? 40.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(radius ?? 4)),
+        } catch (e) {
+          onFailure('An Exception Occurred');
+        }
+      },
+      style: style ??
+          ElevatedButton.styleFrom(
+            minimumSize: Size(width ?? double.infinity, height ?? 40.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(radius ?? 4)),
+            ),
           ),
-        ),
-        child: widget ?? Text(title ?? 'Pay with Esewa', style: textStyle),
-      ),
+      child: widget ?? Text(title ?? 'Pay with Esewa', style: textStyle),
     );
   }
 }
