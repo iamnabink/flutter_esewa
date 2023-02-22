@@ -1,4 +1,4 @@
-# eSewa Flutter [![Share on Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Flutter%20InAppBrowser%20plugin!&url=https://github.com/iamnabink/flutter_esewa&hashtags=flutter,flutterio,dart,wallet,esewa,paymentgateway) [![Share on Facebook](https://img.shields.io/badge/share-facebook-blue.svg?longCache=true&style=flat&colorB=%234267b2)](https://www.facebook.com/sharer/sharer.php?u=https%3A//github.com/iamnabink/flutter_esewa)
+# eSewa Flutter [![Share on Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Flutter%20EsewaPayment%20plugin!&url=https://github.com/iamnabink/flutter_esewa&hashtags=flutter,flutterio,dart,wallet,esewa,paymentgateway) [![Share on Facebook](https://img.shields.io/badge/share-facebook-blue.svg?longCache=true&style=flat&colorB=%234267b2)](https://www.facebook.com/sharer/sharer.php?u=https%3A//github.com/iamnabink/flutter_esewa)
 
 [![Pub Version](https://img.shields.io/pub/v/esewa_flutter.svg)](https://pub.dev/packages/esewa_flutter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -23,7 +23,7 @@ This package doesn't use any plugin or native APIs for payment initialization. I
 ## Requirements
 
 - Dart sdk: ">=2.16.0 <3.0.0"
-- Flutter: ">=2.5.0"
+- Flutter: ">=2.0.0"
 - Android: `minSdkVersion 19` and add support for `androidx` (see [AndroidX Migration](https://flutter.dev/docs/development/androidx-migration) to migrate an existing app)
 - iOS 9.0+: `--ios-language swift`, Xcode version `>= 14`
 

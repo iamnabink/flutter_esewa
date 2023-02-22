@@ -54,6 +54,7 @@ class EsewaPayButton extends StatelessWidget {
     return SizedBox(
       height: height ?? 40.0,
       child: ElevatedButton(
+        // [Deprecated]: 'primary' is deprecated and shouldn't be used. Use backgroundColor instead. This feature was deprecated after v3.1.0.
         onPressed: () async {
           try {
             final result = await Esewa.i
@@ -67,6 +68,7 @@ class EsewaPayButton extends StatelessWidget {
             onFailure('An Exception Occurred');
           }
         },
+
         style: ElevatedButton.styleFrom(
           primary: color,
           elevation: 0,
