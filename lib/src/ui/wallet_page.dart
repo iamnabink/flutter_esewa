@@ -33,6 +33,7 @@ class _EsewaPageState extends State<EsewaPage> {
   /// The URLRequest object that will be used to load the eSewa payment page.
   late final URLRequest paymentRequest;
 
+  /// Esewa page's content widget
   late final EsewaPageContent? content;
 
   @override

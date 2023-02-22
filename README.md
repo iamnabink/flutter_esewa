@@ -27,15 +27,10 @@ This package doesn't use any plugin or native APIs for payment initialization. I
 
 ## Setup
 
-### iOS
-No Configuration Needed
-
-For more info, [see here](https://pub.dev/packages/flutter_inappwebview#important-note-for-ios)
-
-### Android
-Set `minSdkVersion` of your `android/app/build.gradle` file to at least 17.
-
-For more info, [see here](https://pub.dev/packages/flutter_inappwebview#important-note-for-android)
+| Platform | Configuration                                                                                                                                                                   |
+|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| iOS      | No Configuration Needed. For more info, [see here](https://pub.dev/packages/flutter_inappwebview#important-note-for-ios)                                                        |
+| Android  | Set `minSdkVersion` of your `android/app/build.gradle` file to at least 19. For more info, [see here](https://pub.dev/packages/flutter_inappwebview#important-note-for-android) |
 
 # Usage
 
@@ -109,9 +104,52 @@ final config = ESewaConfig.dev(
 );
 ```
 
-# API
+# APIs
 
-### Class: ESewaConfig
+## Class : Esewa
+
+The `Esewa` provides a way to initialize Esewa payment using a custom button or a custom UI.
+Here's an example:
+
+### Methods
+
+ ```
+ init({required BuildContext context,required ESewaConfig eSewaConfig,EsewaPageContent? pageContents})
+ ```
+: Initializes the eSewa payment gateway with the given configuration
+
+Initializes payment method
+
+```dart
+
+final result = await Esewa.i.init(
+context: context,
+eSewaConfig: ESewaConfig.dev(
+// .live for live
+su: 'https://www.marvel.com/hello',
+amt: 10,
+fu: 'https://www.marvel.com/hello',
+pid: '1212',
+// scd: dotenv.env['ESEWA_SCD']!
+));
+```
+
+## Class : EsewaPageContent
+
+The `EsewaPageContent` class provides options for customizing the Esewa payment screen. You can
+add an app bar and a custom loader to the payment screen. Here's an example:
+
+```
+EsewaPageContent(
+  appBar: AppBar(
+    title: Text('Esewa Payment'),
+  ),
+  progressLoader: CircularProgressIndicator(),
+);
+
+```
+
+## Class: ESewaConfig
 
 The `ESewaConfig` class is used to configure the eSewa payment gateway for either live or dev mode.
 It has two constructors:
@@ -142,7 +180,7 @@ It has two constructors:
 - `pdc` (optional): Delivery charge by merchant on product or item or ticket etc. Default value is
     0.
 
-### Class: EsewaPaymentResult
+## Class: EsewaPaymentResult
 
 Class representing the result of a payment transaction.
 
@@ -155,16 +193,8 @@ Class representing the result of a payment transaction.
 - `hasError`: A boolean indicating whether the payment failed or was cancelled and contains a
   non-null error property.
 
-### Class: Esewa
 
-Class providing the main interface for the eSewa payment integration.
-
-### Methods
-
-- `init(BuildContext context, ESewaConfig e)`: Initializes the eSewa payment gateway with the given
-  configuration.
-
-### EsewaPayButton
+### Class: EsewaPayButton
 
 The EsewaPayButton is a customizable button widget that allows users to initiate the payment process
 for the eSewa Payment Gateway. The button can be easily integrated into your Flutter app by calling
