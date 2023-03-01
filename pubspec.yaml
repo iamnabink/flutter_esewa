@@ -4,6 +4,11 @@ version: 1.1.2
 license: MIT
 issue_tracker: https://github.com/iamnabink/flutter_esewa/issues
 homepage: https://github.com/iamnabink/flutter_esewa
+screenshots:
+  - description: 'Flutter eSewa Package Cover'
+    path: screenshots/cover.png
+  - description: 'Esewa Payment Screen with Flutter Esewa Package'
+    path: screenshots/payment_screen.png
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
