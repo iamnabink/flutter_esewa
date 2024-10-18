@@ -49,23 +49,23 @@ class _EsewaPageState extends State<EsewaPage> {
   // The loading state of the WebView.
   bool _isLoading = true;
 
-  InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
-      crossPlatform: InAppWebViewOptions(
-        useShouldOverrideUrlLoading: true,
-        mediaPlaybackRequiresUserGesture: false,
-      ),
-      android: AndroidInAppWebViewOptions(
-        useHybridComposition: true,
-      ),
-      ios: IOSInAppWebViewOptions(
-        allowsInlineMediaPlayback: true,
-      ));
+  // InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
+  //     crossPlatform: InAppWebViewOptions(
+  //       useShouldOverrideUrlLoading: true,
+  //       mediaPlaybackRequiresUserGesture: false,
+  //     ),
+  //     android: AndroidInAppWebViewOptions(
+  //       useHybridComposition: true,
+  //     ),
+  //     ios: IOSInAppWebViewOptions(
+  //       allowsInlineMediaPlayback: true,
+  //     ));
 
   // Generates the URLRequest object for the eSewa payment page.
   URLRequest getURLRequest() {
     var url =
         "${eSewaConfig.serverUrl}tAmt=${eSewaConfig.tAmt}&amt=${eSewaConfig.amt.toPrecision(2)}&txAmt=${eSewaConfig.txAmt?.toPrecision(2)}&psc=${eSewaConfig.psc}&pdc=${eSewaConfig.pdc}&scd=${eSewaConfig.scd}&pid=${eSewaConfig.pid}&su=${eSewaConfig.su}&fu=${eSewaConfig.fu}";
-    var urlRequest = URLRequest(url: Uri.tryParse(url));
+    var urlRequest = URLRequest(url: WebUri(url));
     if (kDebugMode) {
       print(url);
     }
@@ -83,7 +83,7 @@ class _EsewaPageState extends State<EsewaPage> {
         children: [
           InAppWebView(
             initialUrlRequest: paymentRequest,
-            initialOptions: options,
+            // initialOptions: options,
             onWebViewCreated: (webViewController) {
               // When the WebView is created, set the isLoading state to false
               setState(() {
@@ -142,11 +142,11 @@ class _EsewaPageState extends State<EsewaPage> {
 
               return NavigationActionPolicy.ALLOW;
             },
-            onLoadError: (controller, url, code, message) {
+            onReceivedError: (controller, url, code) {
               // If there is an error while loading the WebView, print the error message
               // if the app is in debug mode
               if (kDebugMode) {
-                print('CODE $code Message $message');
+                print('CODE $code Message ');
               }
             },
             onConsoleMessage: (controller, consoleMessage) {},

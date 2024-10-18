@@ -17,3 +17,7 @@
 ## 1.1.2
 * Made minimum `Flutter` SDK requirement 3.
 * Example project bug fixes
+
+## 2.0.0
+* Migrates to Dart SDK `3.5.3` and Flutter `3.24.3`
+* Updated `flutter_inappwebview:^5.7.2+3` to version `^6.1.5` 
