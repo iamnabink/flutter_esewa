@@ -240,12 +240,4 @@ class _EsewaPageState extends State<EsewaPage> {
 
   // Create a payment response object using the refId, productId, and totalAmount
   // values from the URL
-  Future<EsewaPaymentResponse> _createPaymentResponse(
-      Map<String, dynamic> body) async {
-    // legacy mapping not used when 'data' is provided
-    final params = EsewaPaymentResponse(
-      data: body['data'],
-    );
-    return params;
-  }
 }
