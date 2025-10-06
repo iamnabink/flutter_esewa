@@ -37,3 +37,6 @@
   - Removed legacy params (`scd`, `pid`, `su`, `fu`, `tAmt`, `txAmt`, `psc`, `pdc` names in public API)
   - `EsewaPaymentResponse` now only exposes `data` (base64)
   - Older URL query-style flow replaced with form POST + signature
+
+## 3.0.1
+* update response integrity verification guide and transaction status enquiry endpoints in readme
