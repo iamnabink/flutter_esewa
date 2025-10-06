@@ -172,6 +172,34 @@ EsewaPaymentResponse(data: '<base64>')
 
 On failure redirect, the plugin returns an error message if `message` exists, otherwise a generic failure message.
 
+### Verify response integrity (mandatory)
+After successful payment, eSewa redirects to your `successUrl` with response parameters encoded in Base64 under `data`.
+
+Example (decoded response body):
+
+```json
+{
+  "transaction_code": "000AWEO",
+  "status": "COMPLETE",
+  "total_amount": 1000.0,
+  "transaction_uuid": "250610-162413",
+  "product_code": "EPAYTEST",
+  "signed_field_names": "transaction_code,status,total_amount,transaction_uuid,product_code,signed_field_names",
+  "signature": "62GcfZTmVkzhtUeh+QJ1AqiJrjoWWGof3U+eTPTZ7fA="
+}
+```
+
+Example (response body encoded in Base64):
+
+```
+eyJ0cmFuc2FjdGlvbl9jb2RlIjoiMDAwQVdFTyIsInN0YXR1cyI6IkNPTVBMRVRFIiwidG90YWxfYW1vdW50IjoiMTAwMC4wIiwi
+dHJhbNhY3Rpb25fdXVpZCI6IjI1MDYxMC0xNjI0MTMiLCJwcm9kdWN0X2NvZGUiOiJFUEFZVEVTVCIsInNpZ25lZF9maWVsZF9uYW1
+lc yI6InRyYW5zYWN0aW9uX2NvZGUsc3RhdHVzLHRvdGFsX2Ftb3VudCx0cmFuc2FjdGlvbl91dWlkLHByb2R1Y3RfY29kZSxzaWdu
+ZWRfZmllbGRfbmFtZXMiLCJzaWduYXR1cmUiOiI2MkdjZlpUbVZremh0VWVoK1FKMUFxaUpyam9XV0dvZjNVK2VUUFRaN2ZBPSJ9
+```
+
+You must verify the integrity of the decoded JSON by recomputing the signature using the same HMAC-SHA256 method as the request and comparing it to the `signature` field in the response JSON.
+
 ## How it works
 - Creates a POST form body with fields: amount, tax_amount, total_amount, product_service_charge, product_delivery_charge, transaction_uuid, product_code, success_url, failure_url, signed_field_names, signature.
 - Signature is generated as HMAC-SHA256 over:
@@ -184,6 +212,35 @@ On failure redirect, the plugin returns an error message if `message` exists, ot
 - Ensure your `successUrl` and `failureUrl` are reachable and match exactly in config.
 - If you see "Couldn't resolve the package 'crypto'", run `flutter pub get` in the plugin and your app.
 - If success occurs without `data`, the plugin returns failure by design. Ensure your backend redirects with the base64 `data` query param.
+
+## Transaction status check (enquiry)
+If a transaction was initiated but you did not receive a redirect, you can query the status API.
+
+Testing (RC):
+
+```
+https://rc.esewa.com.np/api/epay/transaction/status/?product_code=EPAYTEST&total_amount=100&transaction_uuid=123
+```
+
+Production:
+
+```
+https://epay.esewa.com.np/api/epay/transaction/status/?product_code=EPAYTEST&total_amount=100&transaction_uuid=123
+```
+
+Example response:
+
+```json
+{
+  "product_code": "EPAYTEST",
+  "transaction_uuid": "123",
+  "total_amount": 100.0,
+  "status": "COMPLETE",
+  "ref_id": "0001TS9"
+}
+```
+
+Possible statuses include PENDING, COMPLETE, FULL_REFUND, PARTIAL_REFUND, AMBIGUOUS, NOT_FOUND, CANCELED, and service unavailable errors.
 
 
 ## Dev Testing Information
