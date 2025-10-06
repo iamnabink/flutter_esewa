@@ -1,62 +1,80 @@
 part of esewa_flutter;
 
-/// Creates an instance of `ESewaConfig` for live mode
+/// eSewa configuration for v2 form integration
 class ESewaConfig {
+  /// Live mode configuration
   ESewaConfig.live({
-    required this.amt,
-    this.serverUrl = keSewaLiveUrl,
-    required this.scd,
-    required this.pid,
-    required this.su,
-    required this.fu,
-    this.txAmt = 0,
-    this.psc = 0,
-    this.pdc = 0,
-    double? tAmt,
-  }) : tAmt = tAmt ?? amt + (pdc ?? 0.0) + (psc ?? 0.0) + (txAmt ?? 0.0);
+    required this.amount,
+    this.taxAmount = 0,
+    this.productServiceCharge = 0,
+    this.productDeliveryCharge = 0,
+    double? totalAmount,
+    this.serverUrl = 'https://epay.esewa.com.np/api/epay/main/v2/form',
+    required this.productCode,
+    this.transactionUuid,
+    required this.successUrl,
+    required this.failureUrl,
+    this.signedFieldNames = 'total_amount,transaction_uuid,product_code',
+    required this.secretKey,
+  }) : totalAmount = totalAmount ??
+            amount +
+                (productDeliveryCharge ?? 0.0) +
+                (productServiceCharge ?? 0.0) +
+                (taxAmount ?? 0.0);
 
-  /// Creates an instance of `ESewaConfig` for dev mode
+  /// Dev/RC mode configuration
   ESewaConfig.dev({
-    required this.amt,
-    this.txAmt = 0,
-    this.psc = 0,
-    this.pdc = 0,
-    this.serverUrl = keSewaDevUrl,
-    this.scd = keSewaDevMerchantId,
-    required this.pid,
-    required this.su,
-    required this.fu,
-    double? tAmt,
-  }) : tAmt = tAmt ?? amt + (pdc ?? 0.0) + (psc ?? 0.0) + (txAmt ?? 0.0);
+    required this.amount,
+    this.taxAmount = 0,
+    this.productServiceCharge = 0,
+    this.productDeliveryCharge = 0,
+    double? totalAmount,
+    this.serverUrl = 'https://rc-epay.esewa.com.np/api/epay/main/v2/form',
+    this.productCode = 'EPAYTEST',
+    this.transactionUuid,
+    required this.successUrl,
+    required this.failureUrl,
+    this.signedFieldNames = 'total_amount,transaction_uuid,product_code',
+    required this.secretKey,
+  }) : totalAmount = totalAmount ??
+            amount +
+                (productDeliveryCharge ?? 0.0) +
+                (productServiceCharge ?? 0.0) +
+                (taxAmount ?? 0.0);
 
-  /// Total payment amount including tax, service and deliver charge. [i.e tAmt = amt + txAmt + psc + tAmt]
-  double? tAmt;
+  /// Total payment amount including tax, service and delivery charge.
+  double? totalAmount;
 
-  /// live : https://esewa.com.np/epay/main
-  /// dev : https://uat.esewa.com.np/epay/main?
+  /// API form endpoint URL
   String serverUrl;
 
-  /// Amount of product or item or ticket etc
-  double amt;
+  /// Amount of product or item
+  double amount;
 
-  /// Tax amount on product or item or ticket etc
-  double? txAmt;
+  /// Tax amount on product or item
+  double? taxAmount;
 
-  /// Service charge by merchant on product or item or ticket etc
-  double? psc;
+  /// Service charge by merchant
+  double? productServiceCharge;
 
-  /// Delivery charge by merchant on product or item or ticket etc
-  double? pdc;
+  /// Delivery charge by merchant
+  double? productDeliveryCharge;
 
-  /// Merchant code provided by eSewa
-  String scd;
+  /// Merchant product code (was scd)
+  String productCode;
 
-  /// Success URL: a redirect URL of merchant application where customer will be redirected after SUCCESSFUL transaction
-  String su;
+  /// Success redirect URL
+  String successUrl;
 
-  /// Failure URL: a redirect URL of merchant application where customer will be redirected after FAILURE or PENDING transaction
-  String fu;
+  /// Failure redirect URL
+  String failureUrl;
 
-  /// A unique ID of product or item or ticket etc
-  String pid;
+  /// Unique transaction UUID
+  String? transactionUuid;
+
+  /// Comma separated field names to sign
+  String signedFieldNames;
+
+  /// Secret key used to generate signature
+  String secretKey;
 }

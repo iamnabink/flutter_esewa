@@ -33,7 +33,7 @@ class EsewaApp extends StatefulWidget {
 }
 
 class _EsewaAppState extends State<EsewaApp> {
-  String refId = '';
+  String data = '';
   String hasError = '';
 
   @override
@@ -49,16 +49,16 @@ class _EsewaAppState extends State<EsewaApp> {
             /// Example Use case - 1
             EsewaPayButton(
               paymentConfig: ESewaConfig.dev(
-                su: 'https://www.marvel.com/hello',
-                amt: 10,
-                fu: 'https://www.marvel.com/hello',
-                pid: '1212',
-                // scd: dotenv.env['ESEWA_SCD']!
+                amount: 10.0,
+                successUrl: 'https://developer.esewa.com.np/success',
+                failureUrl: 'https://developer.esewa.com.np/failure',
+                secretKey: '8gBm/:&EnhH.1/q',
+                // productCode: 'EPAYTEST', // optional for dev
               ),
               width: 100,
               onFailure: (result) async {
                 setState(() {
-                  refId = '';
+                  data = '';
                   hasError = result;
                 });
                 if (kDebugMode) {
@@ -68,43 +68,15 @@ class _EsewaAppState extends State<EsewaApp> {
               onSuccess: (result) async {
                 setState(() {
                   hasError = '';
-                  refId = result.refId!;
+                  data = result.data!;
                 });
                 if (kDebugMode) {
                   print(result.toJson());
                 }
               },
             ),
-
-            /// Example Use case - 1
-            // TextButton(
-            //   onPressed: () async {
-            //     final result = await Esewa.i.init(
-            //         context: context,
-            //         eSewaConfig: ESewaConfig.dev(
-            //           // .live for live
-            //           su: 'https://www.marvel.com/hello',
-            //           amt: 10,
-            //           fu: 'https://www.marvel.com/hello',
-            //           pid: '1212',
-            //           // scd: dotenv.env['ESEWA_SCD']!
-            //         ));
-            //     // final result = await fakeEsewa();
-            //     if (result.hasData) {
-            //       final response = result.data!;
-            //       if (kDebugMode) {
-            //         print(response.toJson());
-            //       }
-            //     } else {
-            //       if (kDebugMode) {
-            //         print(result.error);
-            //       }
-            //     }
-            //   },
-            //   child: const Text('Pay with Esewa'),
-            // ),
-            if (refId.isNotEmpty)
-              Text('Console: Payment Success, Ref Id: $refId'),
+            if (data.isNotEmpty)
+              Text('Console: Payment Success, Data is: $data'),
             if (hasError.isNotEmpty)
               Text('Console: Payment Failed, Message: $hasError'),
           ],

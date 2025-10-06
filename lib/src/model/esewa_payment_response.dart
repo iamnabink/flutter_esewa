@@ -2,25 +2,18 @@ part of esewa_flutter;
 
 class EsewaPaymentResponse {
   EsewaPaymentResponse({
-    this.productId,
-    this.totalAmount,
-    this.refId,
+    this.data,
   });
 
-  String? productId;
-  String? totalAmount;
-  String? refId;
+  /// Base64 encoded payment response data
+  String? data;
 
   Map<String, dynamic> toJson() => {
-        "oid": productId,
-        "amt": totalAmount,
-        "refId": refId,
+        "data": data,
       };
 
   @override
   String toString() => '''
-        "productId": $productId,
-        "totalAmount": $totalAmount,
-        "refId": $refId,
+        "data": $data,
   ''';
 }

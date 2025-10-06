@@ -30,8 +30,8 @@ class _EsewaPageState extends State<EsewaPage> {
   /// The eSewa configuration object.
   late final ESewaConfig eSewaConfig;
 
-  /// The URLRequest object that will be used to load the eSewa payment page.
-  late final URLRequest paymentRequest;
+  /// Generated fields for the v2 POST form
+  late final Map<String, String> _formFields;
 
   /// Esewa page's content widget
   late final EsewaPageContent? content;
@@ -41,13 +41,15 @@ class _EsewaPageState extends State<EsewaPage> {
     content = widget.pageContents;
     // Assign the eSewa configuration object from the widget to the local variable.
     eSewaConfig = widget.eSewaConfig;
-    // Generate the URLRequest object from the eSewa configuration parameters.
-    paymentRequest = getURLRequest();
+    // Prepare the POST form fields from the configuration parameters.
+    _formFields = _buildFormFields();
     super.initState();
   }
 
   // The loading state of the WebView.
   bool _isLoading = true;
+  // Prevent duplicate results
+  bool _completed = false;
 
   // InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
   //     crossPlatform: InAppWebViewOptions(
@@ -61,15 +63,51 @@ class _EsewaPageState extends State<EsewaPage> {
   //       allowsInlineMediaPlayback: true,
   //     ));
 
-  // Generates the URLRequest object for the eSewa payment page.
-  URLRequest getURLRequest() {
-    var url =
-        "${eSewaConfig.serverUrl}tAmt=${eSewaConfig.tAmt}&amt=${eSewaConfig.amt.toPrecision(2)}&txAmt=${eSewaConfig.txAmt?.toPrecision(2)}&psc=${eSewaConfig.psc}&pdc=${eSewaConfig.pdc}&scd=${eSewaConfig.scd}&pid=${eSewaConfig.pid}&su=${eSewaConfig.su}&fu=${eSewaConfig.fu}";
-    var urlRequest = URLRequest(url: WebUri(url));
+  // Build fields and signature for application/x-www-form-urlencoded POST to eSewa v2 API
+  Map<String, String> _buildFormFields() {
+    final amount = eSewaConfig.amount.toPrecision(2).toString();
+    final tax = (eSewaConfig.taxAmount ?? 0).toPrecision(2).toString();
+    final psc =
+        (eSewaConfig.productServiceCharge ?? 0).toPrecision(2).toString();
+    final pdc =
+        (eSewaConfig.productDeliveryCharge ?? 0).toPrecision(2).toString();
+    final total = (eSewaConfig.totalAmount ??
+            (eSewaConfig.amount +
+                (eSewaConfig.taxAmount ?? 0) +
+                (eSewaConfig.productServiceCharge ?? 0) +
+                (eSewaConfig.productDeliveryCharge ?? 0)))
+        .toPrecision(2)
+        .toString();
+
+    final txnUuid = eSewaConfig.transactionUuid ??
+        "TXN-${DateTime.now().millisecondsSinceEpoch}-${DateTime.now().microsecondsSinceEpoch % 1000}";
+
+    final signedData =
+        'total_amount=$total,transaction_uuid=$txnUuid,product_code=${eSewaConfig.productCode}';
+    final keyBytes = utf8.encode(eSewaConfig.secretKey);
+    final dataBytes = utf8.encode(signedData);
+    final hmac = crypto.Hmac(crypto.sha256, keyBytes);
+    final digest = hmac.convert(dataBytes);
+    final signature = base64.encode(digest.bytes);
+
     if (kDebugMode) {
-      print(url);
+      print('Signed data -> $signedData');
+      print('Signature -> $signature');
     }
-    return urlRequest;
+
+    return {
+      'amount': amount,
+      'tax_amount': tax,
+      'total_amount': total,
+      'product_service_charge': psc,
+      'product_delivery_charge': pdc,
+      'transaction_uuid': txnUuid,
+      'product_code': eSewaConfig.productCode,
+      'success_url': eSewaConfig.successUrl,
+      'failure_url': eSewaConfig.failureUrl,
+      'signed_field_names': eSewaConfig.signedFieldNames,
+      'signature': signature,
+    };
   }
 
   @override
@@ -82,7 +120,15 @@ class _EsewaPageState extends State<EsewaPage> {
       body: Stack(
         children: [
           InAppWebView(
-            initialUrlRequest: paymentRequest,
+            initialUrlRequest: URLRequest(
+              url: WebUri(eSewaConfig.serverUrl),
+              method: 'POST',
+              body: Uint8List.fromList(
+                  utf8.encode(Uri(queryParameters: _formFields).query)),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+            ),
             // initialOptions: options,
             onWebViewCreated: (webViewController) {
               // When the WebView is created, set the isLoading state to false
@@ -106,11 +152,14 @@ class _EsewaPageState extends State<EsewaPage> {
               });
             },
             shouldOverrideUrlLoading: (controller, navigationAction) async {
-              var uri = navigationAction.request.url!;
-              var body = navigationAction.request.body;
+              final reqUrl = navigationAction.request.url;
+              final body = navigationAction.request.body;
               if (kDebugMode) {
-                print(uri.toString());
+                print(reqUrl?.toString());
                 print(body);
+              }
+              if (reqUrl == null) {
+                return NavigationActionPolicy.ALLOW;
               }
               // Check if the URL scheme is one of the allowed schemes
               if (![
@@ -121,19 +170,47 @@ class _EsewaPageState extends State<EsewaPage> {
                 "data",
                 "javascript",
                 "about"
-              ].contains(uri.scheme)) {
+              ].contains(reqUrl.scheme)) {
                 // If the URL scheme is not allowed, cancel the navigation
                 return NavigationActionPolicy.CANCEL;
               }
               try {
-                var result = Uri.parse(uri.toString());
-                var body = result.queryParameters;
-                if (body['refId'] != null) {
-                  // If the URL contains a refId parameter, create a payment response
-                  // and return it to the previous screen using Navigator.pop()
-                  _createPaymentResponse(body).then((value) {
-                    Navigator.pop(context, EsewaPaymentResult(data: value));
-                  });
+                final urlStr = reqUrl.toString();
+                final isSuccessRedirect =
+                    urlStr.startsWith(eSewaConfig.successUrl);
+                final isFailureRedirect =
+                    urlStr.startsWith(eSewaConfig.failureUrl);
+
+                // Only handle redirects to success/failure URLs
+                if (!isSuccessRedirect && !isFailureRedirect) {
+                  return NavigationActionPolicy.ALLOW;
+                }
+
+                if (_completed) {
+                  return NavigationActionPolicy.CANCEL;
+                }
+
+                final resultUri = Uri.parse(urlStr);
+                final qp = resultUri.queryParameters;
+
+                if (isSuccessRedirect) {
+                  final base64Data = qp['data'];
+                  _completed = true;
+                  if (base64Data != null && base64Data.isNotEmpty) {
+                    final response = EsewaPaymentResponse(data: base64Data);
+                    Navigator.pop(context, EsewaPaymentResult(data: response));
+                  } else {
+                    Navigator.pop(context,
+                        EsewaPaymentResult(error: kPaymentErrorMessage));
+                  }
+                  return NavigationActionPolicy.CANCEL;
+                }
+
+                if (isFailureRedirect) {
+                  _completed = true;
+                  final message = qp['message'] ?? kPaymentErrorMessage;
+                  Navigator.pop(context, EsewaPaymentResult(error: message));
+                  return NavigationActionPolicy.CANCEL;
                 }
               } catch (e) {
                 Navigator.pop(
@@ -165,10 +242,9 @@ class _EsewaPageState extends State<EsewaPage> {
   // values from the URL
   Future<EsewaPaymentResponse> _createPaymentResponse(
       Map<String, dynamic> body) async {
+    // legacy mapping not used when 'data' is provided
     final params = EsewaPaymentResponse(
-      refId: body['refId'],
-      productId: body['oid'],
-      totalAmount: body['amt'],
+      data: body['data'],
     );
     return params;
   }
