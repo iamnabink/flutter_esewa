@@ -27,7 +27,7 @@
 * New configuration model `ESewaConfig.dev/live` with fields:
   - `amount`, `taxAmount`, `productServiceCharge`, `productDeliveryCharge`, `totalAmount`
   - `productCode`, `transactionUuid`, `successUrl`, `failureUrl`, `signedFieldNames`, `secretKey`, `serverUrl`
-* HMAC-SHA256 signature generation moved to Dart (no inline HTML)
+* HMAC-SHA256 signature generation moved to Dart
 * WebView now posts `application/x-www-form-urlencoded` directly to v2 endpoint
 * Success redirect returns only base64 `data`; plugin surfaces `EsewaPaymentResponse(data)`
 * Failure redirect surfaces error message (if present) or a generic message
