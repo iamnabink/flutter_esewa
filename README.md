@@ -8,218 +8,87 @@ eSewa Payment Gateway into your Flutter app and start accepting payments from yo
 Whether you're building an eCommerce app or any other type of app that requires payments, this
 plugin makes the integration process simple and straightforward.
 
-![Cover Image](https://github.com/iamnabink/flutter_esewa/raw/main/screenshots/cover.png)
+![Cover Image](screenshots/screenshot.png)
 
-# Note
-This package doesn't use any plugin or native APIs for payment initialization. Instead, it is based on the Flutter InAppWebView package. A shoutout to the developer of [InAppWebView](https://pub.dev/packages/flutter_inappwebview) package for providing such a useful package.
+</div>
 
-## Features
+### What’s new (v2 form + signature)
+- Uses eSewa v2 form endpoint
+- HMAC-SHA256 signature generated in Dart (no inline HTML)
+- WebView posts `application/x-www-form-urlencoded`
+- Success returns only base64 `data` via `EsewaPaymentResponse`
 
-- Easy integration
-- No complex setup
-- Pure Dart code
-- Simple to use
+## Installation
 
-## Requirements
-
-* Android: `minSdkVersion 19` and add support for `androidx` (see [AndroidX Migration](https://flutter.dev/docs/development/androidx-migration))
-* iOS: `--ios-language swift`, Xcode version `>= 11`
-
-## Setup
-
-| Platform | Configuration                                                                                                                                                                   |
-|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| iOS      | No Configuration Needed. For more info, [see here](https://pub.dev/packages/flutter_inappwebview#important-note-for-ios)                                                        |
-| Android  | Set `minSdkVersion` of your `android/app/build.gradle` file to at least 19. For more info, [see here](https://pub.dev/packages/flutter_inappwebview#important-note-for-android) |
-
-# Usage
-
-1. Add `esewa_flutter` as a dependency in your `pubspec.yaml` file:
+Add the dependency in your app’s `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  esewa_flutter: ^1.0.0
+  esewa_flutter: latestVersion
 ```
 
-2. Import the package in your Dart code:
-
-```import 'package:esewa_flutter/esewa_flutter.dart';```
-
-3. Create an instance of `ESewaConfig` with your payment information:
-
-The ESewaConfig class holds the configuration details for the payment gateway. Pass an instance of
-ESewaConfig to the init() method of the Esewa class to initiate the payment process.
-
-```
-final config = ESewaConfig.live(
-  amt: 100,
-  scd: 'merchant_id',
-  pid: 'product_id',
-  su: 'https://success.com.np',
-  fu: 'https://failure.com.np',
-);
-
+This package depends on:
+```yaml
+dependencies:
+  flutter_inappwebview: ^6.1.5
+  crypto: ^3.0.6
 ```
 
-4. Initialize the payment by calling `Esewa.init()` method:
-
+Run:
+```bash
+flutter pub get
 ```
+
+## iOS and Android setup
+- Ensure minimum Flutter 3 and a recent iOS/Android toolchain.
+- iOS: WKWebView is used via `flutter_inappwebview`.
+- Android: no extra setup beyond plugin requirements.
+
+## Quick start
+
+```dart
+import 'package:esewa_flutter/esewa_flutter.dart';
+
+// Inside a widget tree
+EsewaPayButton(
+  paymentConfig: ESewaConfig.dev(
+    amount: 100.0,
+    successUrl: 'https://developer.esewa.com.np/success',
+    failureUrl: 'https://developer.esewa.com.np/failure',
+    secretKey: 'YOUR_SECRET_KEY',
+    // productCode: 'EPAYTEST', // optional for dev (defaults to EPAYTEST)
+  ),
+  onSuccess: (resp) {
+    // resp.data is base64 string
+    print('Success base64: ${resp.data}');
+  },
+  onFailure: (message) {
+    print('Failed: $message');
+  },
+),
+```
+
+Or imperatively:
+
+```dart
 final result = await Esewa.i.init(
   context: context,
-  eSewaConfig: config,
+  eSewaConfig: ESewaConfig.live(
+    amount: 100.0,
+    successUrl: 'https://your.domain/success',
+    failureUrl: 'https://your.domain/failure',
+    secretKey: 'YOUR_SECRET_KEY',
+    productCode: 'YOUR_MERCHANT_CODE',
+  ),
 );
-```
 
-5. Check the payment result:
-
-After the payment is completed or cancelled by the user, the plugin returns an instance of
-EsewaPaymentResult. If the payment was successful, hasData will be true and you can access the
-EsewaPaymentResponse object using data. If the payment was unsuccessful, hasError will be true and
-you can access the error message using error.
-
-```
 if (result.hasData) {
-  // Payment successful
-  final response = result.data!;
-  print('Payment successful. Ref ID: ${response.refId}');
+  print(result.data!.data); // base64
 } else {
-  // Payment failed or cancelled
-  final error = result.error!;
-  print('Payment failed or cancelled. Error: $error');
+  print(result.error);
 }
 ```
 
-# Dev/Live Mode
-
-`ESewaConfig` supports both dev and live mode. For live mode, use the `ESewaConfig.live()`
-constructor, and for dev mode, use the `ESewaConfig.dev()` constructor. Here's an example of using
-the dev mode:
-
-```
-final config = ESewaConfig.dev(
-  amt: 100,
-  pid: 'product_id',
-  su: 'https://success.com.np',
-  fu: 'https://failure.com.np',
-);
-```
-
-# APIs
-
-## Class : Esewa
-
-The `Esewa` provides a way to initialize Esewa payment using a custom button or a custom UI.
-Here's an example:
-
-### Methods
-
- ```
- init({required BuildContext context,required ESewaConfig eSewaConfig,EsewaPageContent? pageContents})
- ```
-: Initializes the eSewa payment gateway with the given configuration
-
-Initializes payment method
-
-```dart
-
-final result = await Esewa.i.init(
-context: context,
-eSewaConfig: ESewaConfig.dev(
-// .live for live
-su: 'https://www.marvel.com/hello',
-amt: 10,
-fu: 'https://www.marvel.com/hello',
-pid: '1212',
-// scd: dotenv.env['ESEWA_SCD']!
-));
-```
-
-## Class : EsewaPageContent
-
-The `EsewaPageContent` class provides options for customizing the Esewa payment screen. You can
-add an app bar and a custom loader to the payment screen. Here's an example:
-
-```
-EsewaPageContent(
-  appBar: AppBar(
-    title: Text('Esewa Payment'),
-  ),
-  progressLoader: CircularProgressIndicator(),
-);
-
-```
-
-## Class: ESewaConfig
-
-The `ESewaConfig` class is used to configure the eSewa payment gateway for either live or dev mode.
-It has two constructors:
-
-- `ESewaConfig.live()`: used for live mode configuration. It requires `amt`, `scd`, `pid`, `su`,
-  and `fu` parameters, and optionally `txAmt`, `psc`, and `pdc` parameters. The `serverUrl`
-  parameter is set to the eSewa live URL by default.
-
-- `ESewaConfig.dev()`: used for dev mode configuration. It requires `amt`, `scd`, `pid`, `su`,
-  and `fu` parameters, and optionally `txAmt`, `psc`, and `pdc` parameters. The `serverUrl`
-  parameter is set to the eSewa dev URL by default.
-
-### Properties
-
-- `serverUrl` (required): URL of the eSewa payment gateway. Use https://esewa.com.np/epay/main for
-  live environment, and https://uat.esewa.com.np/epay/main for development environment.
-- `amt` (required): Amount of the payment.
-- `scd` (required): Merchant code provided by eSewa.
-- `pid` (required): A unique ID of the product or item or ticket etc.
-- `su` (required): Success URL: a redirect URL of merchant application where customer will be
-  redirected after SUCCESSFUL transaction.
-- `fu` (required): Failure URL: a redirect URL of merchant application where customer will be
-  redirected after FAILURE or PENDING transaction.
-- `tAmt` (optional): Total payment amount including tax, service and deliver charge. Default value
-  is amt + pdc, where pdc is 0.
-- `txAmt` (optional): Tax amount on product or item or ticket etc. Default value is 0.
-- `psc` (optional): Service charge by merchant on product or item or ticket etc. Default value is 0.
-- `pdc` (optional): Delivery charge by merchant on product or item or ticket etc. Default value is
-    0.
-
-## Class: EsewaPaymentResult
-
-Class representing the result of a payment transaction.
-
-### Properties
-
-- `data`: The payment response data, if the payment was successful. Null otherwise.
-- `error`: The error message, if the payment failed or was cancelled. Null otherwise.
-- `hasData`: A boolean indicating whether the payment was successful and contains a non-null data
-  property.
-- `hasError`: A boolean indicating whether the payment failed or was cancelled and contains a
-  non-null error property.
-
-
-### Class: EsewaPayButton
-
-The EsewaPayButton is a customizable button widget that allows users to initiate the payment process
-for the eSewa Payment Gateway. The button can be easily integrated into your Flutter app by calling
-the EsewaPayButton constructor and passing the required parameters.
-
-Here is an example of how to use the EsewaPayButton widget:
-
-```
-EsewaPayButton(
-  paymentConfig: ESewaConfig.dev(
-    su: 'https://www.marvel.com/hello',
-    amt: 10,
-    fu: 'https://www.marvel.com/hello',
-    pid: '1212',
-  ),
-  width: 40,
-  onFailure: (result) async {
-    // handle failure scenario here
-  },
-  onSuccess: (result) async {
-    // handle success scenario here
-  },
-),
-
-```
 
 With `EsewaPayButton`, the integration of eSewa Payment Gateway becomes even easier, as the payment
 process can be initiated with just a single button press.
@@ -242,14 +111,91 @@ The `EsewaPayButton` widget has the following parameters:
 - `title`: The title of the button (default is "Pay with Esewa").
 - `textStyle`: The text style of the button title.
 
+
+## Configuration
+
+Constructors align to environments and endpoints:
+
+```dart
+// Live
+ESewaConfig.live({
+  required double amount,
+  double? taxAmount = 0,
+  double? productServiceCharge = 0,
+  double? productDeliveryCharge = 0,
+  double? totalAmount, // optional; defaults to amount + tax + service + delivery
+  String serverUrl = 'https://epay.esewa.com.np/api/epay/main/v2/form',
+  required String productCode, // Merchant product code
+  String? transactionUuid,     // Optional; auto-generated if not provided
+  required String successUrl,  // Redirect URL on success
+  required String failureUrl,  // Redirect URL on failure
+  String signedFieldNames = 'total_amount,transaction_uuid,product_code',
+  required String secretKey,   // HMAC-SHA256 secret key
+})
+
+// Dev/RC
+ESewaConfig.dev({
+  required double amount,
+  double? taxAmount = 0,
+  double? productServiceCharge = 0,
+  double? productDeliveryCharge = 0,
+  double? totalAmount,
+  String serverUrl = 'https://rc-epay.esewa.com.np/api/epay/main/v2/form',
+  String productCode = 'EPAYTEST',
+  String? transactionUuid,
+  required String successUrl,
+  required String failureUrl,
+  String signedFieldNames = 'total_amount,transaction_uuid,product_code',
+  required String secretKey,
+})
+```
+
+### Field definitions
+- amount: base amount to charge
+- taxAmount: tax amount
+- productServiceCharge: service charge
+- productDeliveryCharge: delivery charge
+- totalAmount: if omitted, computed as amount + tax + service + delivery
+- serverUrl: v2 form endpoint for the target environment
+- productCode: eSewa merchant code (EPAYTEST in dev)
+- transactionUuid: unique id; auto-generated if null
+- successUrl, failureUrl: your redirect endpoints
+- signedFieldNames: fields included in signature (default aligns with v2 spec)
+- secretKey: HMAC secret key provided by eSewa
+
+## Return payload
+On success redirect, the plugin expects a `data` query parameter with a base64 string and returns:
+
+```dart
+EsewaPaymentResponse(data: '<base64>')
+```
+
+On failure redirect, the plugin returns an error message if `message` exists, otherwise a generic failure message.
+
+## How it works
+- Creates a POST form body with fields: amount, tax_amount, total_amount, product_service_charge, product_delivery_charge, transaction_uuid, product_code, success_url, failure_url, signed_field_names, signature.
+- Signature is generated as HMAC-SHA256 over:
+  `total_amount=<...>,transaction_uuid=<...>,product_code=<...>`
+  and base64-encoded.
+- Loads an `InAppWebView` and posts to the configured v2 endpoint.
+- Listens for navigation to your `successUrl` or `failureUrl` and completes accordingly.
+
+## Troubleshooting
+- Ensure your `successUrl` and `failureUrl` are reachable and match exactly in config.
+- If you see "Couldn't resolve the package 'crypto'", run `flutter pub get` in the plugin and your app.
+- If success occurs without `data`, the plugin returns failure by design. Ensure your backend redirects with the base64 `data` query param.
+
+
 ## Dev Testing Information
 
 If you want to test eSewa payment integration in development environment, you can use the following
 information:
 
-- `ESEWA_SCD`: Your Merchant code provided by eSewa. You can use `EPAYTEST` for testing purposes.
-- `ESEWA_URL`: The URL of the eSewa payment gateway. Use `https://uat.esewa.com.np/epay/main?` for
-  development environment.
+- SecretKey:
+SecretKey for every merchant partner will be provided from eSewa
+For UAT, SecretKey will be `8gBm/:&EnhH.1/q` (Input should be text type.)
+
+- Algorithm used for signature generation is SHA-256
 - Test eSewa IDs: You can use any of the following test eSewa IDs for testing purposes:
     - 9806800001
     - 9806800002
@@ -259,16 +205,6 @@ information:
 - Password: Nepal@123
 - OTP: 123456
 
-## Screenshots
-
-Here are some screenshots of the eSewa Payment Gateway integrated into a ecommerce Flutter app:
-
-<table>
-  <tr>
-    <td><img src="https://github.com/iamnabink/flutter_esewa/raw/main/screenshots/order_screen.png" alt="Example Order Screen" width="400"/></td>
-    <td><img src="https://github.com/iamnabink/flutter_esewa/raw/main/screenshots/payment_screen.png" alt="Payment Screen" width="400"/></td>
-  </tr>
-</table>
 
 ## Run the example app
 
@@ -293,7 +229,3 @@ request on [Github](https://github.com/iamnabink/flutter_esewa/issues)..
 
 If you have any questions or suggestions, feel free
 to [contact me on LinkedIn](https://www.linkedin.com/in/iamnabink/).
-
-
-
-
