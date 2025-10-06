@@ -5,8 +5,6 @@ license: MIT
 issue_tracker: https://github.com/iamnabink/flutter_esewa/issues
 homepage: https://github.com/iamnabink/flutter_esewa
 screenshots:
-  - description: 'Flutter eSewa Package Cover'
-    path: screenshots/screenshot.png
   - description: 'Esewa Payment Screen with Flutter Esewa Package'
     path: screenshots/screenshot.png
 
